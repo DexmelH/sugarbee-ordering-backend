@@ -14,7 +14,7 @@ users.post('/register', (req, res) => {
   const userData = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    email: req.body.email,
+    username: req.body.username,
     password: req.body.password,
     created: today,
   }
@@ -48,7 +48,7 @@ users.post('/register', (req, res) => {
 users.post('/login', (req, res) => {
   userm.findOne({
     where: {
-      email: req.body.email
+      username: req.body.username
     }
   })
   .then(user => {
