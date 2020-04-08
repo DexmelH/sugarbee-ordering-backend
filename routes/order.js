@@ -9,9 +9,9 @@ orders.use(cors())
 
 process.env.SECRET_KEY = 'sugarbee'
 
-orders.post('/register', (req, res) => {
+orders.post('/create', (req, res) => {
     const today =  new Date().toJSON();
-    const userData = {
+    const orderData = {
         creator_id: req.body.creator_id,
         created: today,
         customer_name: req.body.customer_name,
@@ -31,58 +31,13 @@ orders.post('/register', (req, res) => {
         special_offer: req.body.special_offer,
     }
 
-    ordersm.findOne({
-        where: {
-            email: req.body.email
-        }
-    })
-    .then(user => {
-        if(!user) {
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                userData.password = hash
-                userm.create(userData)
-                .then(user => {
-                    res.json({status: user.email + ' registered'})
-                })
-                .catch(err => {
-                    res.send('error: ' + err)
-                })
-            })
-        } 
-        else {
-            res.json({error: "User already exists"})
-        }
+    ordersm.create(orderData)
+    .then(order => {
+        res.json({status: order.email + ' registered'})
     })
     .catch(err => {
         res.send('error: ' + err)
     })
 })
 
-users.post('/login', (req, res) => {
-    userm.findOne({
-        where: {
-            username: req.body.username
-        }
-    })
-    .then(user => {
-        if(user) {
-            if(bcrypt.compareSync(req.body.password, user.password)) {
-                let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
-                    expiresIn: 1440
-                })
-                res.send(token)
-            } 
-            else {
-                res.status(400).json({error: 'Password incorrect'})
-            }
-        } 
-        else {
-            res.status(400).json({error: 'User does not exist'})
-        }
-    })
-    .catch(err => {
-        res.status(400).json({error: err})
-    })
-})
-
-module.exports = users;
+module.exports = orders;
