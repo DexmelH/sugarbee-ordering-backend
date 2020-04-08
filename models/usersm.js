@@ -4,7 +4,7 @@ const db = require("../database/db")
 module.exports = db.sequelize.define(
     'user',
     {
-        id: {
+        identifier: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
@@ -23,7 +23,7 @@ module.exports = db.sequelize.define(
         },
         created: {
             type: Sequelize.STRING,
-            defaulValue: Sequelize.NOW
+            defaultValue: Sequelize.NOW
         },
     },
     {
