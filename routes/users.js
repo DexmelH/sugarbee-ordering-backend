@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt")
 const userm = require("../models/usersm")
 users.use(cors())
 
-process.env.SECRET_KEY = 'sugarbee'
+process.env.SECRET_KEY = 'secret'
 
 users.post('/register', (req, res) => {
     const today =  new Date().toJSON();
@@ -21,7 +21,7 @@ users.post('/register', (req, res) => {
 
     userm.findOne({
         where: {
-            email: req.body.email
+            username: req.body.username
         }
     })
     .then(user => {
@@ -30,7 +30,7 @@ users.post('/register', (req, res) => {
                 userData.password = hash
                 userm.create(userData)
                 .then(user => {
-                    res.json({status: user.email + ' registered'})
+                    res.json({status: user.username + ' registered'})
                 })
                 .catch(err => {
                     res.send('error: ' + err)
@@ -61,7 +61,7 @@ users.post('/login', (req, res) => {
                 res.send(token)
             } 
             else {
-                res.status(400).json({error: 'Password incorrect'})
+                res.status(400).json({error: err})
             }
         } 
         else {
